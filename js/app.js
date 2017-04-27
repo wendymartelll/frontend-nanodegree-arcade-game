@@ -82,9 +82,9 @@ Player.prototype.handleInput = function(e){
     // move to the up
     }else if(e === 'up'){
       player.y -= dy;
-      // keeps the player outside the water and inside the canvas
+      // keeps the player outside the water and inside the canvas and adds points
       if (player.y < 1){
-        console.log("Player y 1: " + player.y)
+        player.score += 10;
         resetPlayerifTouchWater(player.y);
       }
     // move to the down
@@ -235,7 +235,7 @@ for(var i = 0 ; i < 3; i++){
   allGems.push(new Gem());
 };
 
-// - - - - - - - - EVENR LISTENERS  - - - - - - - - //
+// - - - - - - - - EVENT LISTENERS  - - - - - - - - //
 
 // This initiates the program
 // This listens for key presses and sends the keys to your
