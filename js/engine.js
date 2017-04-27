@@ -45,8 +45,15 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        update(dt);
-        render();
+
+        // This function will be used to show the message "Game over" OR "You won".
+        renderWinner();
+
+        // if true stop drawing bugs and everything else. to let message above be written
+        if(gameWon === false && gameLost === false){
+          update(dt);
+          render();
+        }
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -57,7 +64,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    }
+    };
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -67,24 +74,94 @@ var Engine = (function(global) {
         reset();
         lastTime = Date.now();
         main();
-    }
+    };
 
     /* This function is called by main (our game loop) and itself calls all
-     * of the functions which may need to update entity's data. Based on how
-     * you implement your collision detection (when two entities occupy the
-     * same space, for instance when your character should die), you may find
-     * the need to add an additional function call here. For now, we've left
-     * it commented out - you may or may not want to implement this
-     * functionality this way (you could just implement collision detection
-     * on the entities themselves within your app.js file).
+     * of the functions which may need to update entity's data.
+     * This update at every move of the player to check collisions with the gem or the enemy
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
-    }
+        allGems.forEach(function(gem){
+          // We need the width, height of the image of the vehicle and player
+          // to allow updates all times
+          oX = gem.x;
+          oY = gem.y;
+          oH = 30;
+          oW = 37;
+          pX = player.x;
+          pY = player.y;
+          pH = 68;
+          pW = 32;
+
+          // here if checkCollisions is true the gem visibility will chcange
+          // and add points to the score
+          var flagGem = checkCollisions(pX, pY, pH, pW, oX, oY, oH, oW);
+          if (flagGem === true && gem.visible === true){
+            gem.visible = false;
+            player.score += 100;
+            }
+        });
+
+        // We need the width, height of the image of the vehicle and player
+        // Updates the player's and enemy's location. The X & Y position is
+        // needed it by getting the diferencial between
+        // the bleed and the actual graphic from both the enemy and the player
+        allEnemies.forEach(function(enemy){
+          oX = enemy.x;
+          oY = enemy.y;
+          oH = 30;
+          oW = 60;
+          pX = player.x;
+          pY = player.y ;
+          pH = 68;
+          pW = 32;
+
+          // here if checkCollisions is true the player's position will be reset
+          // and deduct points of the score
+          var flagEnemy = checkCollisions(pX, pY, pH, pW, oX, oY, oH, oW);
+            if (flagEnemy === true){
+              player.y = 300;
+              player.x = 200;
+              player.score -= 50;
+            }
+          });
+    };
+
+    // This function draws the score in the canvas
+    var drawScore = function(){
+      var score = player.score;
+      // Text attributes
+      ctx.font = "20pt Impact";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#5169D4";
+      ctx.fillText("score: " + score, 400, 25);
+    };
+
+    // This function deletes and draw a new score after the change in the score
+    function renderScore(){
+        ctx.clearRect(0,0,505,30);
+        drawScore();
+    };
+
+    //Handles collision of the player with the vehicle, it compares the X location against
+    //the sum of its X location + widht to check if they are overlapping
+    //if true keeps comparing for Y for each element.
+    function checkCollisions (pX, pY, pH, pW, oX, oY, oH, oW ){
+      var clause1 =      pX < oX + oW;
+      var clause2 = pX + pW > oX;
+      var clause3 =      pY < oY + oH;
+      var clause4 = pH + pY > oY;
+
+      if (clause1 && clause2 && clause3 && clause4) {
+        return true;
+      }else{
+        return false;
+      }
+    };
 
     /* This is called by the update function and loops through all of the
-     * objects within your allEnemies array as defined in app.js and calls
+     * objects within your allEnemies & allGems array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
      * player object. These update methods should focus purely on updating
      * the data/properties related to the object. Do your drawing in your
@@ -93,6 +170,9 @@ var Engine = (function(global) {
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
+        });
+        allGems.forEach(function(gem){
+            gem.update(dt);
         });
         player.update();
     }
@@ -134,10 +214,45 @@ var Engine = (function(global) {
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
-        }
-
+        };
+        // Updates the score
+        renderScore();
         renderEntities();
     }
+
+    // This function counts how many gems were eaten and increases the winner counter
+    var renderWinner = function(){
+      var winner = 0;
+      var looser = 0;
+      allGems.forEach(function(gem){
+        if (gem.visible === false){
+          ++winner;
+        }else{
+          ++looser;
+        }
+      });
+      printWinner(winner, looser);
+    };
+
+    // This function prints the winner and looser message based on the counter and player score
+    var printWinner = function(winner, looser){
+      if (winner === 3){
+          ctx.drawImage(Resources.get('images/youWon.png'), 0, 0);
+          if (gameWon === false){
+            alert("You win! Press any key afterwards to start a new game");
+            winner = 0;
+          }
+          gameWon = true;
+      };
+
+      if(player.score < 0 && looser >= 1){
+          ctx.drawImage(Resources.get('images/youLost.png'), 0, 0);
+          if (gameLost === false){
+            alert ("GAME OVER");
+          }
+          gameLost = true;
+      };
+    };
 
     /* This function is called by the render function and is called on each game
      * tick. Its purpose is to then call the render functions you have defined
@@ -150,7 +265,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
+        allGems.forEach(function(gem) {
+            gem.render();
+        });
         player.render();
     }
 
@@ -171,7 +288,14 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/Gem Orange small.png',
+        'images/Heart.png',
+        'images/Key.png',
+        'images/Gem Green.png',
+        'images/youWon.png',
+        'images/youLost.png',
     ]);
     Resources.onReady(init);
 
