@@ -1,4 +1,4 @@
-# Racing for Gems :gem: :runner:
+# :gem: Racing for Gems :gem: :runner:
 
 Racing for Gems is a game that uses canvas - **javascript, jQuery, HTML5, CSS**. It creates animations inside of a canvas. The game is about a player who needs to eat 3 gems by avoiding collisions with enemies in these case these are 4 bugs.
 
@@ -27,10 +27,41 @@ We have provided the art assets and game engine for you. The repository contains
 
 - ### app.js
     Here you will find the Object Oriented javascript, where the player, the enemy and gem classes are created. Along with the main functions to provide functionalities to the objects.
+For Example:
+    ```
+    var Enemy = function() {
+        this.sprite = 'images/enemy-bug.png';
+        this.x = randomLocationX();
+        this.y = randomLocationY();
+        this.speed = randomSpeed();
+    };
+    ```
+    Also you will find event listeners such...
+    ```
+    document.addEventListener('keyup', function(e) {
+    var allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+    ```
 
 - ### engine.js
     This file provides the game loop functionality.
 A game engine works by drawing (Render function) the entire game screen over and over (Update function), kind of like a flipbook you may have created as a kid.
+    Also, here you will fid the creation of the canvas as you see below.
+    ```
+    var Engine = (function(global) {
+        var doc = global.document,
+            win = global.window,
+            canvas = doc.createElement('canvas'),
+            ctx = canvas.getContext('2d'),
+            lastTime;
+
+        canvas.width = 505;
+        canvas.height = 606;
+    ```
 
 - ### resources.js
     This is simply an image loading utility. It eases the process of loading image files so that they can be used within the game.
@@ -38,7 +69,7 @@ A game engine works by drawing (Render function) the entire game screen over and
 - ### style.css
     This file allows to modify the layout of the page. HTML only.
 
-### Development
+# Development
 Want to contribute? Great!
 In adition of what is already built, you can add more cool features.
 For instance:
@@ -46,3 +77,6 @@ For instance:
  - Collectables: you can add more gems to the game, allowing the player to collect them to make the game more interesting.
  - Lives: you can add extra lives represented by a heart.
  - Anything else you like!
+
+# License
+The content of this repository is licensed under a [Creative Commons Attribution License](https://creativecommons.org/licenses/by/3.0/us/)
