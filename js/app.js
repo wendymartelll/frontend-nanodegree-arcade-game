@@ -1,4 +1,4 @@
-
+'use strict'
 // These two global variables are helpers to keep the game
 // looping after winning or lossing
 var gameWon = false;
@@ -13,7 +13,7 @@ var Enemy = function() {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = randomLocationX();
-    this.y = randomLocationY();
+    this.y = this.randomLocationY();
     this.speed = randomSpeed();
 };
 
@@ -54,9 +54,9 @@ Player.prototype.update = function(){
 // This Player class has this function to draw
 // the image after getting the new locations
 Player.prototype.render = function(){
-  a = Resources.get(this.sprite);
-  b = this.x;
-  c = this.y;
+  var a = Resources.get(this.sprite);
+  var b = this.x;
+  var c = this.y;
   ctx.drawImage(a, b, c);
 };
 
@@ -85,7 +85,7 @@ Player.prototype.handleInput = function(e){
       // keeps the player outside the water and inside the canvas and adds points
       if (player.y < 1){
         player.score += 10;
-        resetPlayerifTouchWater(player.y);
+        player.resetPlayerifTouchWater(player.y);
       }
     // move to the down
     }else if(e === 'down'){
@@ -103,7 +103,7 @@ Player.prototype.handleInput = function(e){
 var Gem = function(){
   this.sprite = 'images/Gem Orange small.png';
   this.x = randomLocationX();
-  this.y = randomLocationGemY();
+  this.y = this.randomLocationGemY();
   this.speed = randomSpeed();
   this.visible = true;
 };
@@ -131,9 +131,9 @@ Gem.prototype.update = function(dt) {
 // - - - - - - - - HELPER FUNCTIONS  - - - - - - - - //
 
 // If the player reaches the water the game should be reset
-var resetPlayerifTouchWater = function(y){
-    player.y =300;
-    player.x =200;
+Player.prototype.resetPlayerifTouchWater = function(y){
+    this.y =300;
+    this.x =200;
 };
 
 // This function give us a random number between 0 to 400
@@ -159,7 +159,7 @@ var randomOption = function(){
 // This function give us an exact location based on the
 // ramdonOption function to place ENEMIES on the Y axis.
 var arrayLoc = new Array();
-var randomLocationY = function(){
+Enemy.prototype.randomLocationY = function(){
 
   do{
     var loc = randomOption();
@@ -182,8 +182,8 @@ var randomLocationY = function(){
 // This function give us an exact location based on the
 // ramdonOption function to place GEMS on the Y axis (The function above
 // and dthis one differ because the size of the gem was modified).
-var arrayLocGem = new Array();
-var randomLocationGemY = function(){
+var arrayLocGem = [];
+Gem.prototype.randomLocationGemY = function(){
   do{
     var loc = randomOption();
       if (loc === 1 && arrayLocGem.includes(loc) != true){
@@ -259,4 +259,3 @@ document.addEventListener('keyup', function(e) {
 //this handles the keyboard once is a buttom is pressed
     player.handleInput(allowedKeys[e.keyCode]);
 });
-x
