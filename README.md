@@ -6,7 +6,7 @@ Racing for Gems is a game that uses canvas - **javascript, jQuery, HTML5, CSS**.
 
   1. Clone this repo.
   2. Open file :  `index.html `in your favorite IDE
-  3. This is how the project looks like -> click [here](https://wendymartelll.github.io/frontend-nanodegree-arcade-game/to) see it. 
+  3. This is how the project looks like -> click [here](https://wendymartelll.github.io/frontend-nanodegree-arcade-game) to see it. 
 
 
 #### How does the game works?
