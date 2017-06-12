@@ -67,32 +67,32 @@ Player.prototype.handleInput = function(e){
 
     // move to the left
     if(e === 'left'){
-      player.x -= dx;
+      this.x -= dx;
     // keeps the player inside the canvas
-      if(player.x < 0){
-        player.x += dx;
+      if(this.x < 0){
+        this.x += dx;
       }
     // move to the right
     }else if(e === 'right'){
-      player.x += dx;
+      this.x += dx;
     // keeps the player inside the canvas
-      if(player.x > 400){
-        player.x -= dx;
+      if(this.x > 400){
+        this.x -= dx;
       }
     // move to the up
     }else if(e === 'up'){
-      player.y -= dy;
+      this.y -= dy;
       // keeps the player outside the water and inside the canvas and adds points
-      if (player.y < 1){
-        player.score += 10;
-        player.resetPlayerifTouchWater(player.y);
+      if (this.y < 1){
+        this.score += 10;
+        this.resetPlayerifTouchWater(this.y);
       }
     // move to the down
     }else if(e === 'down'){
-      player.y += dy;
+      this.y += dy;
       // keeps the player inside the canvas
-      if(player.y > 400){
-        player.y -= dy;
+      if(this.y > 400){
+        this.y -= dy;
       }
     }
 };
@@ -131,7 +131,7 @@ Gem.prototype.update = function(dt) {
 // - - - - - - - - HELPER FUNCTIONS  - - - - - - - - //
 
 // If the player reaches the water the game should be reset
-Player.prototype.resetPlayerifTouchWater = function(y){
+Player.prototype.resetPlayerifTouchWater = function(){
     this.y =300;
     this.x =200;
 };

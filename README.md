@@ -4,10 +4,10 @@ Racing for Gems is a game that uses canvas - **javascript, jQuery, HTML5, CSS**.
 
 # Quickstart
 
-####  Using your normal browser
   1. Clone this repo.
-  2. Open all files : `app.js`, `engine.js`, `resources.js`, `README.md` file and `index.html `in your favorite IDE
-  3. Load in Chrome `index.html`
+  2. Open file :  `index.html `in your favorite IDE
+  3. This is how the project looks like -> click [here](https://wendymartelll.github.io/frontend-nanodegree-arcade-game/to) see it. 
+
 
 #### How does the game works?
  In this game, your have one player, four enemies, and three gems. The goal of the player is to collect all gems. The player can move left, right, up, down. The enemies move in varying speeds on the paved block portion of the scene. Once a player collides with an enemy, the player is reset to his original position and the score decreases by 50 points. If the player collides with a gem, the gem disappears and the score increases by 100 points. The score increases each time the player reaches the water. Once the player collects all the gems the game is won.
